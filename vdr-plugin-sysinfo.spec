@@ -2,7 +2,7 @@
 %define plugin	sysinfo
 %define name	vdr-plugin-%plugin
 %define version	0.1.0a
-%define rel	17
+%define rel	18
 
 Summary:	VDR plugin: System information plugin
 Name:		%name
@@ -12,23 +12,28 @@ Group:		Video
 License:	GPL
 URL:		http://kikko77.altervista.org/
 Source:		vdr-%plugin-%version.tar.bz2
+Patch0:		01_sysinfo-0.1.0a-fontfix.dpatch
+Patch1:		sysinfo-0.1.0a-i18n-1.6.patch
 BuildRoot:	%{_tmppath}/%{name}-buildroot
-BuildRequires:	vdr-devel >= 1.4.1-6
+BuildRequires:	vdr-devel >= 1.6.0
 Requires:	vdr-abi = %vdr_abi
 
 %description
 This plugin show same features of the vdr-box system like :
--kernel version
--cpu type
--cpu frequency
--cpu usage
--cpu free
--total memory
--memory free
--memory usage
+- kernel version
+- cpu type
+- cpu frequency
+- cpu usage
+- cpu free
+- total memory
+- memory free
+- memory usage
 
 %prep
 %setup -q -n %plugin-%version
+%patch0 -p1
+%patch1 -p1
+%vdr_plugin_prep
 
 %build
 %vdr_plugin_build
@@ -64,5 +69,3 @@ rm -rf %{buildroot}
 %doc README HISTORY
 %{_bindir}/sysinfo.sh
 %{_vdr_plugin_cfgdir}/%{plugin}
-
-
