@@ -2,7 +2,7 @@
 %define plugin	sysinfo
 %define name	vdr-plugin-%plugin
 %define version	0.1.0a
-%define rel	19
+%define rel	20
 
 Summary:	VDR plugin: System information plugin
 Name:		%name
