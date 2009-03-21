@@ -14,6 +14,7 @@ URL:		http://kikko77.altervista.org/
 Source:		vdr-%plugin-%version.tar.bz2
 Patch0:		01_sysinfo-0.1.0a-fontfix.dpatch
 Patch1:		sysinfo-0.1.0a-i18n-1.6.patch
+Patch2:		sysinfo-fix-includes.patch
 BuildRoot:	%{_tmppath}/%{name}-buildroot
 BuildRequires:	vdr-devel >= 1.6.0
 Requires:	vdr-abi = %vdr_abi
@@ -33,6 +34,7 @@ This plugin show same features of the vdr-box system like :
 %setup -q -n %plugin-%version
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 %vdr_plugin_prep
 
 %build
