@@ -1,0 +1,624 @@
+
+This is a semi-automatically created i18n adaptation patch and may contain
+errors (such as missing translations). This should only be used as a
+temporary measure until the upstream plugin maintainer fixes the plugin
+properly according to the instructions in i18n-to-gettext.pl.
+
+Created for Mandriva Linux packaging by Anssi Hannula <anssi@mandriva.org>.
+
+
+Index: sysinfo-0.1.0a/Makefile
+===================================================================
+--- sysinfo-0.1.0a/Makefile
++++ sysinfo-0.1.0a/Makefile	2008-04-25 01:14:23.000000000 +0300
+@@ -62,9 +62,34 @@
+ 
+ -include $(DEPFILE)
+ 
++### Internationalization (I18N):
++
++PODIR     = po
++LOCALEDIR = $(VDRDIR)/locale
++I18Npo    = $(wildcard $(PODIR)/*.po)
++I18Nmsgs  = $(addprefix $(LOCALEDIR)/, $(addsuffix /LC_MESSAGES/vdr-$(PLUGIN).mo, $(notdir $(foreach file, $(I18Npo), $(basename $(file))))))
++I18Npot   = $(PODIR)/$(PLUGIN).pot
++
++%.mo: %.po
++	msgfmt -c -o $@ $<
++
++$(I18Npot): $(wildcard *.[ch] *.[ch]xx *.cc *.[ch]pp *.hh)
++	xgettext -C -cTRANSLATORS --no-wrap --no-location -k -ktr -ktrNOOP --msgid-bugs-address='<http://qa.mandriva.com/>' -o $@ $^
++
++%.po: $(I18Npot)
++	msgmerge -U --no-wrap --no-location --backup=none -q $@ $<
++	@touch $@
++
++$(I18Nmsgs): $(LOCALEDIR)/%/LC_MESSAGES/vdr-$(PLUGIN).mo: $(PODIR)/%.mo
++	@mkdir -p $(dir $@)
++	cp $< $@
++
++.PHONY: i18n
++i18n: $(I18Nmsgs)
++
+ ### Targets:
+ 
+-all: libvdr-$(PLUGIN).so
++all: libvdr-$(PLUGIN).so i18n
+ 
+ libvdr-$(PLUGIN).so: $(OBJS)
+ 	$(CXX) $(CXXFLAGS) -shared $(OBJS) -o $@
+@@ -79,4 +104,5 @@
+ 	@echo Distribution package created as $(PACKAGE).tgz
+ 
+ clean:
++	@-rm -f $(PODIR)/*.mo $(PODIR)/*.pot
+ 	@-rm -f $(OBJS) $(DEPFILE) *.so *.tgz core* *~
+Index: sysinfo-0.1.0a/i18n.h
+===================================================================
+--- sysinfo-0.1.0a/i18n.h
++++ sysinfo-0.1.0a/i18n.h	2008-04-25 01:14:23.000000000 +0300
+@@ -1,325 +0,0 @@
+-#ifndef ___I18N_H
+-#define ___I18N_H
+-
+-#include <vdr/i18n.h>
+-#ifndef VDRVERSNUM
+-#include <vdr/config.h>
+-#endif
+-
+-extern const char *i18n_name;
+-extern const tI18nPhrase Phrases[];
+-
+-#undef tr
+-#define tr(s)  I18nTranslate(s, i18n_name)
+-
+-const char *i18n_name = 0;
+-
+-const tI18nPhrase Phrases[] = {
+-   {"SysInfo",							//English
+-	"",									// Deutsch
+-	"",									// Slovenski
+-	"Informazioni sul sistema",			// Italiano
+-	"", 								// Nederlands
+-	"", 								// Português
+-	"", 								// Français
+-	"", 								// Norsk
+-	"", 								// Suomi
+-	"", 								// Polski
+-	"", 								// Español
+-	"", 								// Ellinika
+-	"", 								// Svenska
+-	"", 								// Romaneste
+-	"",									//
+-	"",									//
+-	"", 								// Russian
+-	"",									//
+-   },
+-   {"System information plugin",		//English
+-	"",									// Deutsch
+-	"",									// Slovenski
+-	"Plugin informazioni sul sistema",	// Italiano
+-	"", 								// Nederlands
+-	"", 								// Português
+-	"", 								// Français
+-	"", 								// Norsk
+-	"", 								// Suomi
+-	"", 								// Polski
+-	"", 								// Español
+-	"", 								// Ellinika
+-	"", 								// Svenska
+-	"", 								// Romaneste
+-	"",									//
+-	"",									//
+-	"", 								// Russian
+-	"",									//
+-   },   
+-   {"Total memory:",					//English
+-	"",									// Deutsch
+-	"",									// Slovenski
+-	"Memoria totale:",					// Italiano
+-	"", 								// Nederlands
+-	"", 								// Português
+-	"", 								// Français
+-	"", 								// Norsk
+-	"", 								// Suomi
+-	"", 								// Polski
+-	"", 								// Español
+-	"", 								// Ellinika
+-	"", 								// Svenska
+-	"", 								// Romaneste
+-	"",									//
+-	"",									//
+-	"", 								// Russian
+-	"",									//
+-   },  
+-   {"PLEASE WAIT...",					//English
+-	"",									// Deutsch
+-	"",									// Slovenski
+-	"ATTENDERE PREGO...",				// Italiano
+-	"", 								// Nederlands
+-	"", 								// Português
+-	"", 								// Français
+-	"", 								// Norsk
+-	"", 								// Suomi
+-	"", 								// Polski
+-	"", 								// Español
+-	"", 								// Ellinika
+-	"", 								// Svenska
+-	"", 								// Romaneste
+-	"",									//
+-	"",									//
+-	"", 								// Russian
+-	"",									//
+-   },  
+-   {"Cpu temperature:",					//English
+-	"",									// Deutsch
+-	"",									// Slovenski
+-	"Temperatura cpu:",					// Italiano
+-	"", 								// Nederlands
+-	"", 								// Português
+-	"", 								// Français
+-	"", 								// Norsk
+-	"", 								// Suomi
+-	"", 								// Polski
+-	"", 								// Español
+-	"", 								// Ellinika
+-	"", 								// Svenska
+-	"", 								// Romaneste
+-	"",									//
+-	"",									//
+-	"", 								// Russian
+-	"",									//
+-   },    
+-   {"M/B temperature:",					//English
+-	"",									// Deutsch
+-	"",									// Slovenski
+-	"Temperatura della M/B:",			// Italiano
+-	"", 								// Nederlands
+-	"", 								// Português
+-	"", 								// Français
+-	"", 								// Norsk
+-	"", 								// Suomi
+-	"", 								// Polski
+-	"", 								// Español
+-	"", 								// Ellinika
+-	"", 								// Svenska
+-	"", 								// Romaneste
+-	"",									//
+-	"",									//
+-	"", 								// Russian
+-	"",									//
+-   }, 
+-   {"Fan1:",							//English
+-	"",									// Deutsch
+-	"",									// Slovenski
+-	"Giri ventola 1:",					// Italiano
+-	"", 								// Nederlands
+-	"", 								// Português
+-	"", 								// Français
+-	"", 								// Norsk
+-	"", 								// Suomi
+-	"", 								// Polski
+-	"", 								// Español
+-	"", 								// Ellinika
+-	"", 								// Svenska
+-	"", 								// Romaneste
+-	"",									//
+-	"",									//
+-	"", 								// Russian
+-	"",									//
+-   },
+-   {"Fan2:",							//English
+-	"",									// Deutsch
+-	"",									// Slovenski
+-	"Giri ventola 2:",	// Italiano
+-	"", 								// Nederlands
+-	"", 								// Português
+-	"", 								// Français
+-	"", 								// Norsk
+-	"", 								// Suomi
+-	"", 								// Polski
+-	"", 								// Español
+-	"", 								// Ellinika
+-	"", 								// Svenska
+-	"", 								// Romaneste
+-	"",									//
+-	"",									//
+-	"", 								// Russian
+-	"",									//
+-   },
+-   {"Video disk free space:",			//English
+-	"",									// Deutsch
+-	"",									// Slovenski
+-	"Spazio libero disco video:",		// Italiano
+-	"", 								// Nederlands
+-	"", 								// Português
+-	"", 								// Français
+-	"", 								// Norsk
+-	"", 								// Suomi
+-	"", 								// Polski
+-	"", 								// Español
+-	"", 								// Ellinika
+-	"", 								// Svenska
+-	"", 								// Romaneste
+-	"",									//
+-	"",									//
+-	"", 								// Russian
+-	"",									//
+-   },
+-   {"Linux kernel:",					//English
+-	"",									// Deutsch
+-	"",									// Slovenski
+-	"Kernel linux:",					// Italiano
+-	"", 								// Nederlands
+-	"", 								// Português
+-	"", 								// Français
+-	"", 								// Norsk
+-	"", 								// Suomi
+-	"", 								// Polski
+-	"", 								// Español
+-	"", 								// Ellinika
+-	"", 								// Svenska
+-	"", 								// Romaneste
+-	"",									//
+-	"",									//
+-	"", 								// Russian
+-	"",									//
+-   },
+-   {"Cpu type:",							//English
+-	"",									// Deutsch
+-	"",									// Slovenski
+-	"Tipo cpu:",						// Italiano
+-	"", 								// Nederlands
+-	"", 								// Português
+-	"", 								// Français
+-	"", 								// Norsk
+-	"", 								// Suomi
+-	"", 								// Polski
+-	"", 								// Español
+-	"", 								// Ellinika
+-	"", 								// Svenska
+-	"", 								// Romaneste
+-	"",									//
+-	"",									//
+-	"", 								// Russian
+-	"",									//
+-   },
+-   {"Cpu speed:",						//English
+-	"",									// Deutsch
+-	"",									// Slovenski
+-	"Velocità cpu:",					// Italiano
+-	"", 								// Nederlands
+-	"", 								// Português
+-	"", 								// Français
+-	"", 								// Norsk
+-	"", 								// Suomi
+-	"", 								// Polski
+-	"", 								// Español
+-	"", 								// Ellinika
+-	"", 								// Svenska
+-	"", 								// Romaneste
+-	"",									//
+-	"",									//
+-	"", 								// Russian
+-	"",									//
+-   },
+-   {"Cpu used:",						//English
+-	"",									// Deutsch
+-	"",									// Slovenski
+-	"Cpu utilizzata:",					// Italiano
+-	"", 								// Nederlands
+-	"", 								// Português
+-	"", 								// Français
+-	"", 								// Norsk
+-	"", 								// Suomi
+-	"", 								// Polski
+-	"", 								// Español
+-	"", 								// Ellinika
+-	"", 								// Svenska
+-	"", 								// Romaneste
+-	"",									//
+-	"",									//
+-	"", 								// Russian
+-	"",									//
+-   },
+-   {"Cpu free:",						//English
+-	"",									// Deutsch
+-	"",									// Slovenski
+-	"Cpu libera:",						// Italiano
+-	"", 								// Nederlands
+-	"", 								// Português
+-	"", 								// Français
+-	"", 								// Norsk
+-	"", 								// Suomi
+-	"", 								// Polski
+-	"", 								// Español
+-	"", 								// Ellinika
+-	"", 								// Svenska
+-	"", 								// Romaneste
+-	"",									//
+-	"",									//
+-	"", 								// Russian
+-	"",									//
+-   },
+-   {"Used memory:",						//English
+-	"",									// Deutsch
+-	"",									// Slovenski
+-	"Memoria utilizzata:",				// Italiano
+-	"", 								// Nederlands
+-	"", 								// Português
+-	"", 								// Français
+-	"", 								// Norsk
+-	"", 								// Suomi
+-	"", 								// Polski
+-	"", 								// Español
+-	"", 								// Ellinika
+-	"", 								// Svenska
+-	"", 								// Romaneste
+-	"",									//
+-	"",									//
+-	"", 								// Russian
+-	"",									//
+-   },
+-   {"Free memory:",						//English
+-	"",									// Deutsch
+-	"",									// Slovenski
+-	"Memoria libera:",					// Italiano
+-	"", 								// Nederlands
+-	"", 								// Português
+-	"", 								// Français
+-	"", 								// Norsk
+-	"", 								// Suomi
+-	"", 								// Polski
+-	"", 								// Español
+-	"", 								// Ellinika
+-	"", 								// Svenska
+-	"", 								// Romaneste
+-	"",									//
+-	"",									//
+-	"", 								// Russian
+-	"",									//
+-   },
+- { NULL }
+-};
+-
+-#endif //___I18N_H
+Index: sysinfo-0.1.0a/sysinfo.c
+===================================================================
+--- sysinfo-0.1.0a/sysinfo.c
++++ sysinfo-0.1.0a/sysinfo.c	2008-04-25 01:14:23.000000000 +0300
+@@ -1,11 +1,11 @@
+ #include "config.h"
+ #include "sysinfoosd.h"
+ #include "sysinfosetup.h"
+-#include "i18n.h"
++
+ 
+ static const char *VERSION        = "0.1.0a";
+-static const char *DESCRIPTION    = "System information plugin";
+-static const char *MAINMENUENTRY  = "SysInfo";
++static const char *DESCRIPTION    = trNOOP("System information plugin");
++static const char *MAINMENUENTRY  = trNOOP("SysInfo");
+ 
+ 
+ //class cSysInfo : cPlugin {
+@@ -61,7 +61,7 @@
+ 
+ bool cSysInfo::Start(void) {
+   // Start any background activities the plugin shall perform.
+-  RegisterI18n(Phrases);
++  
+   // Default values for setup
+   return true;
+ }
+Index: sysinfo-0.1.0a/po/it_IT.po
+===================================================================
+--- sysinfo-0.1.0a/po/it_IT.po
++++ sysinfo-0.1.0a/po/it_IT.po	2008-04-25 01:14:23.000000000 +0300
+@@ -0,0 +1,100 @@
++# VDR sysinfo plugin language source file.
++# Copyright (C) YEAR THE VDR-sysinfo'S COPYRIGHT HOLDER
++# This file is distributed under the same license as the VDR-sysinfo package.
++# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
++#
++msgid ""
++msgstr ""
++"Project-Id-Version: VDR-sysinfo\n"
++"Report-Msgid-Bugs-To: http://qa.mandriva.com/\n"
++"POT-Creation-Date: 2008-04-25 01:14+0300\n"
++"PO-Revision-Date: 2008-04-25 01:14+0300\n"
++"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
++"Language-Team: <vdr@linuxtv.org>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=ISO-8859-15\n"
++"Content-Transfer-Encoding: 8bit\n"
++
++#: sysinfo.c:7
++msgid "System information plugin"
++msgstr "Plugin informazioni sul sistema"
++
++#: sysinfo.c:8
++msgid "SysInfo"
++msgstr "Informazioni sul sistema"
++
++#: sysinfoosd.c:99
++msgid "PLEASE WAIT..."
++msgstr "ATTENDERE PREGO..."
++
++#: sysinfoosd.c:211
++msgid "Cpu temperature:"
++msgstr "Temperatura cpu:"
++
++#: sysinfoosd.c:213
++msgid "M/B temperature:"
++msgstr "Temperatura della M/B:"
++
++#: sysinfoosd.c:220
++msgid "Fan1:"
++msgstr "Giri ventola 1:"
++
++#: sysinfoosd.c:222
++msgid "Fan2:"
++msgstr "Giri ventola 2:"
++
++#: sysinfoosd.c:235
++msgid "Video disk free space:"
++msgstr "Spazio libero disco video:"
++
++#: sysinfoosd.c:246
++msgid "Linux kernel:"
++msgstr "Kernel linux:"
++
++#: sysinfoosd.c:248
++msgid "Cpu type:"
++msgstr "Tipo cpu:"
++
++#: sysinfoosd.c:275
++msgid "Cpu speed:"
++msgstr "Velocità cpu:"
++
++#: sysinfoosd.c:285
++msgid "Cpu used:"
++msgstr "Cpu utilizzata:"
++
++#: sysinfoosd.c:290
++msgid "Cpu free:"
++msgstr "Cpu libera:"
++
++#: sysinfoosd.c:314
++msgid "Total memory:"
++msgstr "Memoria totale:"
++
++#: sysinfoosd.c:323
++msgid "Free memory:"
++msgstr "Memoria libera:"
++
++#: sysinfoosd.c:332
++msgid "Used memory:"
++msgstr "Memoria utilizzata:"
++
++#: sysinfosetup.c:31
++msgid "Refresh Time in second"
++msgstr ""
++
++#: sysinfosetup.c:35
++msgid "Background opacity"
++msgstr ""
++
++#: sysinfosetup.c:36
++msgid "Text opacity"
++msgstr ""
++
++#: sysinfosetup.c:37
++msgid "Border opacity"
++msgstr ""
++
++#: sysinfosetup.c:38
++msgid "Use DXR3"
++msgstr ""
+Index: sysinfo-0.1.0a/po/sysinfo.pot
+===================================================================
+--- sysinfo-0.1.0a/po/sysinfo.pot
++++ sysinfo-0.1.0a/po/sysinfo.pot	2008-04-25 01:14:23.000000000 +0300
+@@ -0,0 +1,101 @@
++# SOME DESCRIPTIVE TITLE.
++# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
++# This file is distributed under the same license as the PACKAGE package.
++# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
++#
++#, fuzzy
++msgid ""
++msgstr ""
++"Project-Id-Version: PACKAGE VERSION\n"
++"Report-Msgid-Bugs-To: http://qa.mandriva.com/\n"
++"POT-Creation-Date: 2008-04-25 01:14+0300\n"
++"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
++"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
++"Language-Team: LANGUAGE <LL@li.org>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=CHARSET\n"
++"Content-Transfer-Encoding: 8bit\n"
++
++#: sysinfo.c:7
++msgid "System information plugin"
++msgstr ""
++
++#: sysinfo.c:8
++msgid "SysInfo"
++msgstr ""
++
++#: sysinfoosd.c:99
++msgid "PLEASE WAIT..."
++msgstr ""
++
++#: sysinfoosd.c:211
++msgid "Cpu temperature:"
++msgstr ""
++
++#: sysinfoosd.c:213
++msgid "M/B temperature:"
++msgstr ""
++
++#: sysinfoosd.c:220
++msgid "Fan1:"
++msgstr ""
++
++#: sysinfoosd.c:222
++msgid "Fan2:"
++msgstr ""
++
++#: sysinfoosd.c:235
++msgid "Video disk free space:"
++msgstr ""
++
++#: sysinfoosd.c:246
++msgid "Linux kernel:"
++msgstr ""
++
++#: sysinfoosd.c:248
++msgid "Cpu type:"
++msgstr ""
++
++#: sysinfoosd.c:275
++msgid "Cpu speed:"
++msgstr ""
++
++#: sysinfoosd.c:285
++msgid "Cpu used:"
++msgstr ""
++
++#: sysinfoosd.c:290
++msgid "Cpu free:"
++msgstr ""
++
++#: sysinfoosd.c:314
++msgid "Total memory:"
++msgstr ""
++
++#: sysinfoosd.c:323
++msgid "Free memory:"
++msgstr ""
++
++#: sysinfoosd.c:332
++msgid "Used memory:"
++msgstr ""
++
++#: sysinfosetup.c:31
++msgid "Refresh Time in second"
++msgstr ""
++
++#: sysinfosetup.c:35
++msgid "Background opacity"
++msgstr ""
++
++#: sysinfosetup.c:36
++msgid "Text opacity"
++msgstr ""
++
++#: sysinfosetup.c:37
++msgid "Border opacity"
++msgstr ""
++
++#: sysinfosetup.c:38
++msgid "Use DXR3"
++msgstr ""
