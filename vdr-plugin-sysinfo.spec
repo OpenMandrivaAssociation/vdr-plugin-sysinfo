@@ -3,7 +3,7 @@
 Summary:	VDR plugin: System information plugin
 Name:		vdr-plugin-%plugin
 Version:	0.1.0a
-Release:	23
+Release:	24
 Group:		Video
 License:	GPL
 URL:		http://kikko77.altervista.org/
