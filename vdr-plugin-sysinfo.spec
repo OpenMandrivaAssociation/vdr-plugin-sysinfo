@@ -38,14 +38,14 @@ This plugin show same features of the vdr-box system like :
 %install
 %vdr_plugin_install
 
-install -d -m755 %{buildroot}%{_vdr_plugin_cfgdir}/%{plugin}
-install -m755 script/sysinfo.sh %{buildroot}%{_vdr_plugin_cfgdir}/%{plugin}
+install -d -m755 %{buildroot}%{vdr_plugin_cfgdir}/%{plugin}
+install -m755 script/sysinfo.sh %{buildroot}%{vdr_plugin_cfgdir}/%{plugin}
 
 install -d -m755 %{buildroot}%{_bindir}
 
 cat > %{buildroot}%{_bindir}/sysinfo.sh <<EOF
 #!/bin/sh
-VDR_CONFIGDIR="%{_vdr_cfgdir}"
+VDR_CONFIGDIR="%{vdr_cfgdir}"
 [ -e %{_sysconfdir}/sysconfig/vdr ] && . %{_sysconfdir}/sysconfig/vdr
 exec \$VDR_CONFIGDIR/plugins/%plugin/sysinfo.sh \$@
 EOF
@@ -54,6 +54,6 @@ chmod a+x %{buildroot}%{_bindir}/sysinfo.sh
 %files -f %plugin.vdr
 %doc README HISTORY
 %{_bindir}/sysinfo.sh
-%{_vdr_plugin_cfgdir}/%{plugin}
+%{vdr_plugin_cfgdir}/%{plugin}
 
 
