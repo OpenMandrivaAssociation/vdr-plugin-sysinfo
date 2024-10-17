@@ -6,7 +6,7 @@ Version:	0.1.0a
 Release:	24
 Group:		Video
 License:	GPL
-URL:		http://kikko77.altervista.org/
+URL:		https://kikko77.altervista.org/
 Source:		vdr-%plugin-%{version}.tar.bz2
 Patch0:		01_sysinfo-0.1.0a-fontfix.dpatch
 Patch1:		sysinfo-0.1.0a-i18n-1.6.patch
